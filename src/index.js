@@ -1,12 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Route, Switch, BrowserRouter } from 'react-router-dom'
+import Home from './pages/Home';
+import Restaurant from './pages/Restaurant'
+// import RestaurantContext, * as restaurant from './context/restaurant-context'
+import "antd/dist/antd.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
+// const [state, dispatch] = useReducer(distributor.reducer, distributor.initialState);
 ReactDOM.render(
+  
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Switch>
+        <Route path="/home" exact component={Home} />
+        <Route path="/restaurant/:id" component={Restaurant} />
+      </Switch>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
