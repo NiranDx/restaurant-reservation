@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useReducer, useContext } from 'react';
+import { Col, Row } from 'antd';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Col, Row } from 'antd';
-
-import CardRestaurant from '../components/CardRestaurant'
-import RestaurantContext, * as restaurant from '../context/restaurant-context';
-
+import CardRestaurant from '../components/CardRestaurant';
+import Header from '../components/Header';
 import { restaturantList } from '../Mock/restaurant';
 
 const initalState = {
     shop: [],
 }
-
 const reducer = (state, { type, payload }) => {
     switch (type) {
         case 'LOAD_DATA':
@@ -20,12 +17,10 @@ const reducer = (state, { type, payload }) => {
                 ...state,
                 [key]: value
             }
-
         default:
             return state
     }
 }
-
 
 const Home = () => {
     const RenderRestaurantList = styled.div`
@@ -57,19 +52,7 @@ const Home = () => {
             right: 0;
             height: 100%;
     `;
-    // const InputSearch = styled.input`
-    //         flex:1;
-    //         border: none;
-    //         border-radius: 6px 0 0 6px;
-    //         background-color: moccasin;
-    //         padding: 0 6px;
-    //         :focus{
-    //             outline: none;
-    //         }
-    //         ::placeholder {
-    //             color: darkgray;
-    //           }
-    // `;
+
     const NoData = styled.div({
         width: '100vw',
         padding: '25vh',
@@ -89,19 +72,14 @@ const Home = () => {
             },
         })
         setDataShop(shop)
-    }, [shop])
-
-    if (!dataShop) {
-        return null
-    }
+        setSearch(search)
+    }, [shop, search])
 
     const onSearch = () => {
         let keyWordSearch = search.toLowerCase()
-        if (search && search.length > 1) {
+        if (search && search.length > 0) {
             let data = dataShop.filter(item => item.name.toLowerCase().includes(keyWordSearch) == true)
             setDataShop(data)
-        } else {
-            setDataShop(null)
         }
     }
 
@@ -113,9 +91,7 @@ const Home = () => {
     return (
         <Col style={{ padding: '16px 0' }}>
             <Col>
-                <Row>
-                    <label style={{ fontSize: 30, fontWeight: 'bold', color: 'darkorange', textAlign: 'center', width: '100%' }}>Restaurant Reservation</label>
-                </Row>
+                <Header />
                 <Row style={{ padding: '0 8%', marginTop: '16px' }} >
                     <Row style={{ flex: 1, position: 'relative' }}>
                         <input
@@ -151,10 +127,15 @@ const Home = () => {
                         }
                     </RenderRestaurantList>
                     :
-                    <NoData>
-                        <img style={{ opacity: '0.3' }} width={100} height={100} src="https://img.icons8.com/fluent-systems-regular/96/000000/no-data-availible.png" />
-                        <p style={{ fontSize: 30, fontWeight: 'bold', color: 'darkorange' }}>ไม่พบข้อมูลร้านที่ค้นหา</p>
-                    </NoData>
+                    search.length > 0 ?
+                        <NoData>
+                            <img style={{ opacity: '0.3' }} width={100} height={100} src="https://img.icons8.com/fluent-systems-regular/96/000000/no-data-availible.png" />
+                            <p style={{ fontSize: 30, fontWeight: 'bold', color: 'darkorange' }}>ไม่พบข้อมูลร้านที่ค้นหา</p>
+                        </NoData>
+                        :
+                        <NoData>
+                            <p style={{ fontSize: 30, fontWeight: 'bold', color: 'darkorange' }}>loading...</p>
+                        </NoData>
             }
         </Col >
     )
